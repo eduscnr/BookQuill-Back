@@ -4,11 +4,11 @@ import com.example.bookquill.model.Libros;
 
 import java.util.List;
 
-public class LibrosPopularesResultados {
+public class LibrosDTO {
     private List<Libros> listLibrosPopulares;
     private int total;
 
-    public LibrosPopularesResultados(List<Libros> listLibrosPopulares, int total) {
+    public LibrosDTO(List<Libros> listLibrosPopulares, int total) {
         this.listLibrosPopulares = listLibrosPopulares;
         this.total = total;
     }

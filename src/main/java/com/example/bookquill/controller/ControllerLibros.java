@@ -3,7 +3,7 @@ package com.example.bookquill.controller;
 import com.example.bookquill.model.*;
 import com.example.bookquill.model.respuesta.DetalleResenia;
 import com.example.bookquill.model.respuesta.LibrosGenerosRespuesta;
-import com.example.bookquill.model.respuesta.LibrosPopularesResultados;
+import com.example.bookquill.model.respuesta.LibrosDTO;
 import com.example.bookquill.model.respuesta.UsuarioRespuesta;
 import com.example.bookquill.repository.*;
 import jakarta.transaction.Transactional;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,17 +73,12 @@ public class ControllerLibros {
     }
 
     @RequestMapping("/populares")
-    public LibrosPopularesResultados librosPopulares(@RequestParam(defaultValue = "0") int page) {
+    public LibrosDTO librosPopulares(@RequestParam(defaultValue = "0") int page) {
         if (page > MAXIMO_PAGINA) {
             throw new IllegalArgumentException("Página no válida. El límite máximo es " + MAXIMO_PAGINA);
         }
         Pageable pageable = PageRequest.of(page, TAMANIO);
-        return new LibrosPopularesResultados(repositoryLibro.findLibrosPopulares(pageable).getContent(), MAXIMO_PAGINA * TAMANIO);
-    }
-
-    @RequestMapping("/favorito/{idFav}")
-    public List<Libros> getAllLibrosFavoritos(@PathVariable int idFav) {
-        return repositoryLibrosFavoritos.findLibrosFavoritosByUsuarioIdUsuario(idFav);
+        return new LibrosDTO(repositoryLibro.findLibrosPopulares(pageable).getContent(), MAXIMO_PAGINA * TAMANIO);
     }
 
     @RequestMapping("/usuario")

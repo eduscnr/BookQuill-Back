@@ -1,7 +1,6 @@
 package com.example.bookquill.repository;
 
 import com.example.bookquill.model.Libros;
-import com.example.bookquill.model.respuesta.LibrosPopularesResultados;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
