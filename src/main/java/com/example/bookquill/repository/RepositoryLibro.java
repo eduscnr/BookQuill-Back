@@ -16,4 +16,6 @@ public interface RepositoryLibro extends JpaRepository<Libros, Integer> {
     List<Libros> findRandomLibros();
     @Query(value = "SELECT * FROM libros l order by l.estrellas desc", nativeQuery = true)
     Page<Libros> findLibrosPopulares(Pageable pageable);
+    @Query("select l from libros l where l.titulo like :filtro")
+    Page<Libros> buscadorFiltrado(String filtro, Pageable pageable);
 }

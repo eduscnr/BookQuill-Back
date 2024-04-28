@@ -5,6 +5,7 @@ import com.example.bookquill.model.LibrosFavoritos;
 import com.example.bookquill.model.LibrosLeidos;
 import com.example.bookquill.model.LibrosPendientes;
 import com.example.bookquill.model.respuesta.LibrosDTO;
+import com.example.bookquill.repository.RepositoryLibro;
 import com.example.bookquill.repository.RepositoryLibrosFavoritos;
 import com.example.bookquill.repository.RepositoryLibrosLeidos;
 import com.example.bookquill.repository.RepositoryLibrosPendientes;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,8 @@ public class ControladorListarLibros {
     private RepositoryLibrosLeidos repositoryLibrosLeidos;
     @Autowired
     private RepositoryLibrosPendientes repositoryLibrosPendientes;
+    @Autowired
+    private RepositoryLibro repositoryLibro;
     private final static int TAMANIO = 10;
     @RequestMapping("/obtenerLibrosFavoritos")
     public LibrosDTO getAllLibrosFavoritos(@RequestParam(defaultValue = "0") int page, @RequestParam int idUsuario){
@@ -55,6 +59,14 @@ public class ControladorListarLibros {
         List<Libros> librosList = librosLeidosList.stream()
                 .map(LibrosLeidos::getLibro)
                 .toList();
+        return new LibrosDTO(librosList, librosList.size());
+    }
+    @RequestMapping("/filtrarBusqueda")
+    public LibrosDTO mostrarFiltradoBusqueda(@RequestParam(defaultValue = "0") int page, @RequestParam String filtro){
+        Pageable pageable = PageRequest.of(page, TAMANIO);
+        String filtroComodines = "%" + filtro + "%";
+        System.out.println(filtro);
+        List<Libros> librosList = repositoryLibro.buscadorFiltrado(filtroComodines, pageable).getContent();
         return new LibrosDTO(librosList, librosList.size());
     }
 }
