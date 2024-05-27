@@ -168,7 +168,7 @@ public class ControllerLibros {
     public List<DetalleResenia> mostrarResenia(@RequestParam(defaultValue = "0") int page, @RequestParam int idLibro) {
         Pageable pageable = PageRequest.of(page, TAMANIO);
         Libros l = repositoryLibro.getReferenceById(idLibro);
-        List<ReseniaPublica> resenias = repositoryResenia.findByLibros(l, pageable).getContent();
+        List<ReseniaPublica> resenias = repositoryResenia.findAllByLibros(l, pageable).getContent();
         List<DetalleResenia> listaResenia = resenias.stream()
                 .map(this::parseReseniaToDetalleResenia)
                 .collect(Collectors.toList());

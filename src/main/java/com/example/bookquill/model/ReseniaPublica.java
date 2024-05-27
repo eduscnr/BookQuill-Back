@@ -1,5 +1,6 @@
 package com.example.bookquill.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -17,6 +18,7 @@ public class ReseniaPublica {
     private Libros libros;
     private String texto;
     @Column(name = "fecha")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Paris")
     private Date fechaPublicada;
 
     public ReseniaPublica() {

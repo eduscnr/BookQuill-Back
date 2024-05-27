@@ -1,23 +1,16 @@
 package com.example.bookquill.controller;
 
-import com.example.bookquill.model.Libros;
-import com.example.bookquill.model.LibrosFavoritos;
-import com.example.bookquill.model.LibrosLeidos;
-import com.example.bookquill.model.LibrosPendientes;
+import com.example.bookquill.model.*;
 import com.example.bookquill.model.respuesta.LibrosDTO;
-import com.example.bookquill.repository.RepositoryLibro;
-import com.example.bookquill.repository.RepositoryLibrosFavoritos;
-import com.example.bookquill.repository.RepositoryLibrosLeidos;
-import com.example.bookquill.repository.RepositoryLibrosPendientes;
+import com.example.bookquill.model.respuesta.ReseniaDTO;
+import com.example.bookquill.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +25,10 @@ public class ControladorListarLibros {
     private RepositoryLibrosPendientes repositoryLibrosPendientes;
     @Autowired
     private RepositoryLibro repositoryLibro;
+    @Autowired
+    private RepositoryResenia repositoryResenia;
+    @Autowired
+    private RepositoryUsuario repositoryUsuario;
     private final static int TAMANIO = 10;
     @RequestMapping("/obtenerLibrosFavoritos")
     public LibrosDTO getAllLibrosFavoritos(@RequestParam(defaultValue = "0") int page, @RequestParam int idUsuario){
@@ -65,8 +62,15 @@ public class ControladorListarLibros {
     public LibrosDTO mostrarFiltradoBusqueda(@RequestParam(defaultValue = "0") int page, @RequestParam String filtro){
         Pageable pageable = PageRequest.of(page, TAMANIO);
         String filtroComodines = "%" + filtro + "%";
-        System.out.println(filtro);
         List<Libros> librosList = repositoryLibro.buscadorFiltrado(filtroComodines, pageable).getContent();
         return new LibrosDTO(librosList, librosList.size());
+    }
+
+    @RequestMapping("/agregarResenia")
+    public void agregarResenia(@RequestBody ReseniaDTO reseniaDTO){
+        Usuario usuario = repositoryUsuario.getReferenceById(reseniaDTO.getIdUsuario());
+        Libros libros = repositoryLibro.getReferenceById(reseniaDTO.getIdLibro());
+        ReseniaPublica reseniaPublica = new ReseniaPublica(usuario, libros, reseniaDTO.getTexto(), new Date());
+        repositoryResenia.save(reseniaPublica);
     }
 }
