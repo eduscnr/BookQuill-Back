@@ -65,7 +65,6 @@ public class ControladorListarLibros {
     public LibrosDTO mostrarFiltradoBusqueda(@RequestParam(defaultValue = "0") int page, @RequestParam String filtro){
         Pageable pageable = PageRequest.of(page, TAMANIO);
         String filtroComodines = "%" + filtro + "%";
-        System.out.println(filtro);
         List<Libros> librosList = repositoryLibro.buscadorFiltrado(filtroComodines, pageable).getContent();
         return new LibrosDTO(librosList, librosList.size());
     }

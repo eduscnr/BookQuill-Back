@@ -33,16 +33,23 @@ public class ControladorAutenticacion {
     private JwtUtilService jwtUtilService;
     private Authentication authentication;
     @PostMapping("/registrar")
-    public void registrar(@RequestParam String email, @RequestParam String password){
-        System.out.println("registrar");
-        repositoryUsuario.findByEmail(email).ifPresent(user -> {
-            throw new RuntimeException("Email already exists");
-        });
-        Usuario usuario = new Usuario();
-        usuario.setNombre("Usuario 1");
-        usuario.setEmail(email);
-        usuario.setContrasenia(encoder.encode(password));
-        repositoryUsuario.save(usuario);
+    public ResponseEntity<String> registrar(@RequestParam String email, @RequestParam String password, @RequestParam String nombreUsuario){
+        try {
+            System.out.println("registrar");
+            repositoryUsuario.findByEmail(email).ifPresent(user -> {
+                throw new RuntimeException("Email already exists");
+            });
+            System.out.println(email + password + nombreUsuario);
+            Usuario usuario = new Usuario();
+            usuario.setNombre(nombreUsuario);
+            usuario.setEmail(email);
+            usuario.setContrasenia(encoder.encode(password));
+            System.out.println(usuario);
+            repositoryUsuario.save(usuario);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Registro realizado con existo");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fallo en el registro");
+        }
     }
     @PostMapping("/iniciarSesion")
     public ResponseEntity<?> inicarSesion(@RequestBody Map<String, String> credenciales){

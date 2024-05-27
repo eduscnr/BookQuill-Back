@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface RepositoryResenia extends JpaRepository<ReseniaPublica, Integer> {
-    Page<ReseniaPublica> findByLibros(Libros l, Pageable pageable);
+    Page<ReseniaPublica> findAllByLibros(Libros l, Pageable pageable);
 }
