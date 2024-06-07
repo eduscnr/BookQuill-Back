@@ -39,9 +39,10 @@ public class ControllerLibros {
     }
 
     @RequestMapping("/listar")
-    public List<Libros> getLibros(@RequestParam(defaultValue = "0") int page) {
+    public LibrosDTO getLibros(@RequestParam(defaultValue = "0") int page) {
         final Pageable pageable = PageRequest.of(page, TAMANIO);
-        return repositoryLibro.findAll(pageable).getContent();
+        long total = repositoryLibro.count();
+        return new LibrosDTO(repositoryLibro.findAll(pageable).getContent(), (int) total);
     }
 
     @RequestMapping("/top10")
