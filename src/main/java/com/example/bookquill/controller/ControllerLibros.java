@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -171,6 +172,7 @@ public class ControllerLibros {
         Libros l = repositoryLibro.getReferenceById(idLibro);
         List<ReseniaPublica> resenias = repositoryResenia.findAllByLibros(l, pageable).getContent();
         List<DetalleResenia> listaResenia = resenias.stream()
+                .sorted(Comparator.comparing(ReseniaPublica::getFechaPublicada).reversed())
                 .map(this::parseReseniaToDetalleResenia)
                 .collect(Collectors.toList());
         return listaResenia;
